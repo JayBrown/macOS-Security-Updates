@@ -2,7 +2,7 @@
 
 # macOS Security Updates (macSU)
 # shell script: macsu.sh
-# v1.0.0
+# v1.0.1
 # Copyright (c) 2018 Joss Brown (pseud.)
 # license: MIT+
 # info: https://github.com/JayBrown/macOS-Security-Updates
@@ -134,18 +134,18 @@ fi
 
 # components parsing list
 read -d '' macsulist <<"EOF"
-Gatekeeper@/private/var/db/gkopaque.bundle/Contents/version.plist@GK-version.plist@CFBundleShortVersionString
-System Integrity Protection@/System/Library/Sandbox/Compatibility.bundle/Contents/version.plist@SIP-version.plist@CFBundleShortVersionString
-Malware Removal Tool@/System/Library/CoreServices/MRT.app/Contents/version.plist@MRT-version.plist@CFBundleShortVersionString
-Core Suggestions@/System/Library/Intelligent Suggestions/Assets.suggestionsassets/Contents/version.plist@CS-version.plist@CFBundleShortVersionString
-KEXT Exclusions@/System/Library/Extensions/AppleKextExcludeList.kext/Contents/version.plist@KE-version.plist@CFBundleShortVersionString
-Chinese Word List@/usr/share/mecabra/updates/com.apple.inputmethod.SCIM.bundle/Contents/version.plist@CW-version.plist@CFBundleShortVersionString
-Core LSKD (dkrl)@/usr/share/kdrl.bundle/info.plist@dkrl-info.plist@CFBundleVersion
-XProtect@/System/Library/CoreServices/XProtect.bundle/Contents/Resources/XProtect.meta.plist@XProtect.meta.plist@Version
+Gatekeeper@/private/var/db/gkopaque.bundle/Contents/version.plist@GK-version.plist@CFBundleShortVersionString@/private/var/db/gkopaque.bundle
+System Integrity Protection@/System/Library/Sandbox/Compatibility.bundle/Contents/version.plist@SIP-version.plist@CFBundleShortVersionString@/System/Library/Sandbox/Compatibility.bundle
+Malware Removal Tool@/System/Library/CoreServices/MRT.app/Contents/version.plist@MRT-version.plist@CFBundleShortVersionString@/System/Library/CoreServices/MRT.app
+Core Suggestions@/System/Library/Intelligent Suggestions/Assets.suggestionsassets/Contents/version.plist@CS-version.plist@CFBundleShortVersionString@/System/Library/Intelligent Suggestions/Assets.suggestionsassets
+KEXT Exclusions@/System/Library/Extensions/AppleKextExcludeList.kext/Contents/version.plist@KE-version.plist@CFBundleShortVersionString@/System/Library/Extensions/AppleKextExcludeList.kext
+Chinese Word List@/usr/share/mecabra/updates/com.apple.inputmethod.SCIM.bundle/Contents/version.plist@CW-version.plist@CFBundleShortVersionString@/usr/share/mecabra/updates/com.apple.inputmethod.SCIM.bundle
+Core LSKD (dkrl)@/usr/share/kdrl.bundle/info.plist@dkrl-info.plist@CFBundleVersion@/usr/share/kdrl.bundle
+XProtect@/System/Library/CoreServices/XProtect.bundle/Contents/Resources/XProtect.meta.plist@XProtect.meta.plist@Version@/System/Library/CoreServices/XProtect.bundle
 EOF
 
 # check for plist backups
-while IFS='@' read -r cname cplpath cbname ckey
+while IFS='@' read -r cname cplpath cbname ckey cinfo
 do
 	if ! [[ -f "$cachedir/$cbname" ]] ; then
 		ipldate="n/a"
@@ -198,7 +198,7 @@ else
 fi
 
 # check components
-while IFS='@' read -r cname cplpath cbname ckey
+while IFS='@' read -r cname cplpath cbname ckey cinfo
 do
 	pldate=$(stat -f "%Sc" "$cplpath")
 	nxpversion=$(defaults read "$cplpath" $ckey)
@@ -210,7 +210,7 @@ do
 	else
 		oxpversion=$(defaults read "$cachedir/$cbname" $ckey 2>/dev/null)
 		[[ $oxpversion == "" ]] && oxpversion="n/a"
-		logbody="New $cname update\nVersions: v$oxpversion > v$nxpversion\nDate: $pldate"
+		logbody="New $cname update\nPath: $cinfo\nVersions: v$oxpversion > v$nxpversion\nDate: $pldate"
 		_beep
 		_notify "$cname" "v$oxpversion > v$nxpversion ($pldate)"
 		if [[ "$cname" == "XProtect" ]] ; then
