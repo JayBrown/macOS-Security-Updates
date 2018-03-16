@@ -16,7 +16,7 @@
 
 **For XProtect updates XPU also tries to get more information on the update from Digita Security's [Xplorer](https://digitasecurity.com/xplorer/).**
 
-**If you only want to receive notifications about XProtect updates, you can use [XProtectUpdates](https://github.com/JayBrown/) instead.**
+**If you only want to receive notifications about XProtect updates, you can use [XProtectUpdates](https://github.com/JayBrown/XProtectUpdates) instead.**
 
 ![screengrab](https://github.com/JayBrown/macOS-Security-Updates/blob/master/img/screengrab.jpg)
 
