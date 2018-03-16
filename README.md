@@ -42,6 +42,6 @@ After running the LaunchAgent at least once, e.g. with `launchctl start local.lc
 * remove the cloned `macOS-Security-Updates` GitHub repository
 * `rm -f /usr/local/bin/macsu.sh`
 * `rm -rf $HOME/.cache/macSU`
-* `rm -f $HOME/Library/Logs/local.lcars.macOSSecurityUpdates.log`
+* `rm -rf $HOME/Library/Logs/local.lcars.macOSSecurityUpdates`
 * `rm -f /tmp/local.lcars.macOSSecurityUpdates.stdout`
 * `rm -f /tmp/local.lcars.macOSSecurityUpdates.stderr`
