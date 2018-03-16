@@ -14,7 +14,7 @@
 * **Chinese Word List**
 * **Core LSKD (dkrl)**
 
-**For XProtect updates XPU also tries to get more information on the update from Digita Security's [Xplorer](https://digitasecurity.com/xplorer/).**
+**For XProtect updates macSU also tries to get more information on the update from Digita Security's [Xplorer](https://digitasecurity.com/xplorer/).**
 
 **If you only want to receive notifications about XProtect updates, you can use [XProtectUpdates](https://github.com/JayBrown/XProtectUpdates) instead.**
 
@@ -33,7 +33,7 @@ After running the LaunchAgent at least once, e.g. with `launchctl start local.lc
 `plutil -replace Version -integer 2098 "$HOME/.cache/macSU/XProtect.meta.plist" && launchctl start local.lcars.macOSSecurityUpdates`
 
 ### Notes
-* The agent (and thereby the script) will run every 4 hours. If there has been an XProtect update, it's possible that Digita's **Xplorer** hasn't been updated yet, i.e. **XPU** will not return any useful information on the contents of the update. This obviously still needs some testing, but if you want to be on the safe side, you can change the agent's frequency by editing the plist key `StartInterval`, e.g. from 4 to 8 hours.
+* The agent (and thereby the script) will run every 4 hours. If there has been an XProtect update, it's possible that Digita's **Xplorer** hasn't been updated yet, i.e. **macSU** will not return any useful information on the contents of the update. This obviously still needs some testing, but if you want to be on the safe side, you can change the agent's frequency by editing the plist key `StartInterval`, e.g. from 4 to 8 hours.
 * **macSU** has only been tested on El Capitan (OS X 10.11).
 * **macSU** uses the macOS Notification Center, so the **minimum system requirement is OS X 10.8**.
 
