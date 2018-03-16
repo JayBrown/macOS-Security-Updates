@@ -2,7 +2,7 @@
 
 # macOS Security Updates (macSU)
 # shell script: macsu.sh
-# v1.0.1
+# v1.0.2
 # Copyright (c) 2018 Joss Brown (pseud.)
 # license: MIT+
 # info: https://github.com/JayBrown/macOS-Security-Updates
@@ -51,7 +51,6 @@ _beep () {
 }
 
 _digitaping () {
-	dsaccess=true
 	(( pings = 3 ))
 	while [[ $pings -ne 0 ]]
 	do
@@ -132,7 +131,7 @@ else
 	echo "macOS Security Updates log directory detected."
 fi
 
-# components parsing list
+# list of components variables
 read -d '' macsulist <<"EOF"
 Gatekeeper@/private/var/db/gkopaque.bundle/Contents/version.plist@GK-version.plist@CFBundleShortVersionString@/private/var/db/gkopaque.bundle
 System Integrity Protection@/System/Library/Sandbox/Compatibility.bundle/Contents/version.plist@SIP-version.plist@CFBundleShortVersionString@/System/Library/Sandbox/Compatibility.bundle
@@ -205,11 +204,11 @@ do
 	[[ $nxpversion == "" ]] && nxpversion="n/a"
 	if [[ $(md5 -q "$cplpath") == $(md5 -q "$cachedir/$cbname") ]] ; then
 		echo "$cname status: unchanged"
-		echo "$cname version: $nxpversion"
-		echo "$cname updated: $pldate"
+		echo "$cname version: $nxpversion ($pldate)"
 	else
 		oxpversion=$(defaults read "$cachedir/$cbname" $ckey 2>/dev/null)
 		[[ $oxpversion == "" ]] && oxpversion="n/a"
+		echo "$cname status: UPDATED from v$oxpversion to v$nxpversion on $pldate."
 		logbody="New $cname update\nPath: $cinfo\nVersions: v$oxpversion > v$nxpversion\nDate: $pldate"
 		_beep
 		_notify "$cname" "v$oxpversion > v$nxpversion ($pldate)"
