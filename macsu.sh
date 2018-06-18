@@ -2,7 +2,7 @@
 
 # macOS Security Updates (macSU)
 # shell script: macsu.sh
-# v1.0.2
+# v1.0.3
 # Copyright (c) 2018 Joss Brown (pseud.)
 # license: MIT+
 # info: https://github.com/JayBrown/macOS-Security-Updates
@@ -131,8 +131,12 @@ else
 	echo "macOS Security Updates log directory detected."
 fi
 
+# determine system version
+systemv=$(sw_vers -productVersion | awk -F. '{print $2}')
+
 # list of components variables
-read -d '' macsulist <<"EOF"
+if [ $systemv -lt 12 ] ; then # El Capitan (and below)
+	read -d '' macsulist <<"EOF"
 Gatekeeper@/private/var/db/gkopaque.bundle/Contents/version.plist@GK-version.plist@CFBundleShortVersionString@/private/var/db/gkopaque.bundle
 System Integrity Protection@/System/Library/Sandbox/Compatibility.bundle/Contents/version.plist@SIP-version.plist@CFBundleShortVersionString@/System/Library/Sandbox/Compatibility.bundle
 Malware Removal Tool@/System/Library/CoreServices/MRT.app/Contents/version.plist@MRT-version.plist@CFBundleShortVersionString@/System/Library/CoreServices/MRT.app
@@ -142,6 +146,18 @@ Chinese Word List@/usr/share/mecabra/updates/com.apple.inputmethod.SCIM.bundle/C
 Core LSKD (dkrl)@/usr/share/kdrl.bundle/info.plist@dkrl-info.plist@CFBundleVersion@/usr/share/kdrl.bundle
 XProtect@/System/Library/CoreServices/XProtect.bundle/Contents/Resources/XProtect.meta.plist@XProtect.meta.plist@Version@/System/Library/CoreServices/XProtect.bundle
 EOF
+else # Sierra (and later)
+	read -d '' macsulist <<"EOF"
+Gatekeeper@/private/var/db/gkopaque.bundle/Contents/version.plist@GK-version.plist@CFBundleShortVersionString@/private/var/db/gkopaque.bundle
+System Integrity Protection@/System/Library/Sandbox/Compatibility.bundle/Contents/version.plist@SIP-version.plist@CFBundleShortVersionString@/System/Library/Sandbox/Compatibility.bundle
+Malware Removal Tool@/System/Library/CoreServices/MRT.app/Contents/version.plist@MRT-version.plist@CFBundleShortVersionString@/System/Library/CoreServices/MRT.app
+Core Suggestions@/System/Library/PrivateFrameworks/CoreSuggestionsInternals.framework/Resources/Assets.suggestionsassets/Contents/version.plist@CS-version.plist@CFBundleShortVersionString@/System/Library/PrivateFrameworks/CoreSuggestionsInternals.framework/Resources/Assets.suggestionsassets
+KEXT Exclusions@/System/Library/Extensions/AppleKextExcludeList.kext/Contents/version.plist@KE-version.plist@CFBundleShortVersionString@/System/Library/Extensions/AppleKextExcludeList.kext
+Chinese Word List@/System/Library/Input Methods/SCIM.app/Contents/version.plist@CW-version.plist@CFBundleShortVersionString@/System/Library/Input Methods/SCIM.app
+Core LSKD (dkrl)@/usr/share/kdrl.bundle/info.plist@dkrl-info.plist@CFBundleVersion@/usr/share/kdrl.bundle
+XProtect@/System/Library/CoreServices/XProtect.bundle/Contents/Resources/XProtect.meta.plist@XProtect.meta.plist@Version@/System/Library/CoreServices/XProtect.bundle
+EOF
+fi
 
 # check for plist backups
 while IFS='@' read -r cname cplpath cbname ckey cinfo
