@@ -25,6 +25,7 @@
 * `chmod +x macsu.sh && ln -s macsu.sh /usr/local/bin/macsu.sh`
 * `cp local.lcars.macOSSecurityUpdates.plist $HOME/Library/LaunchAgents/local.lcars.macOSSecurityUpdates.plist`
 * `launchctl load $HOME/Library/LaunchAgents/local.lcars.macOSSecurityUpdates.plist`
+* `./macsu.sh`
 * optional: install **[terminal-notifier](https://github.com/julienXX/terminal-notifier)**
 
 ### Testing
