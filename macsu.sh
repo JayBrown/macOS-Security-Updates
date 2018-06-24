@@ -2,7 +2,7 @@
 
 # macOS Security Updates (macSU)
 # shell script: macsu.sh
-# v1.0.3
+# v1.0.4
 # Copyright (c) 2018 Joss Brown (pseud.)
 # license: MIT+
 # info: https://github.com/JayBrown/macOS-Security-Updates
@@ -118,6 +118,8 @@ if ! [[ -d "$cachedir" ]] ; then
 	echo "Cache directory created." >&2
 else
 	echo "Cache directory detected."
+	rm -f "$cachedir/XProtect.meta.plist" 2>/dev/null
+	mv "$cachedir/dkrl-info.plist" "$cachedir/kdrl-info.plist" 2>/dev/null
 fi
 
 # check for log directory
@@ -137,30 +139,30 @@ systemv=$(sw_vers -productVersion | awk -F. '{print $2}')
 # list of components variables
 if [ $systemv -lt 12 ] ; then # El Capitan (and below)
 	read -d '' macsulist <<"EOF"
-Gatekeeper@/private/var/db/gkopaque.bundle/Contents/version.plist@GK-version.plist@CFBundleShortVersionString@/private/var/db/gkopaque.bundle
-System Integrity Protection@/System/Library/Sandbox/Compatibility.bundle/Contents/version.plist@SIP-version.plist@CFBundleShortVersionString@/System/Library/Sandbox/Compatibility.bundle
-Malware Removal Tool@/System/Library/CoreServices/MRT.app/Contents/version.plist@MRT-version.plist@CFBundleShortVersionString@/System/Library/CoreServices/MRT.app
-Core Suggestions@/System/Library/Intelligent Suggestions/Assets.suggestionsassets/Contents/version.plist@CS-version.plist@CFBundleShortVersionString@/System/Library/Intelligent Suggestions/Assets.suggestionsassets
-KEXT Exclusions@/System/Library/Extensions/AppleKextExcludeList.kext/Contents/version.plist@KE-version.plist@CFBundleShortVersionString@/System/Library/Extensions/AppleKextExcludeList.kext
-Chinese Word List@/usr/share/mecabra/updates/com.apple.inputmethod.SCIM.bundle/Contents/version.plist@CW-version.plist@CFBundleShortVersionString@/usr/share/mecabra/updates/com.apple.inputmethod.SCIM.bundle
-Core LSKD (dkrl)@/usr/share/kdrl.bundle/info.plist@dkrl-info.plist@CFBundleVersion@/usr/share/kdrl.bundle
-XProtect@/System/Library/CoreServices/XProtect.bundle/Contents/Resources/XProtect.meta.plist@XProtect.meta.plist@Version@/System/Library/CoreServices/XProtect.bundle
+Gatekeeper@/private/var/db/gkopaque.bundle/Contents/version.plist@GK-version.plist@CFBundleShortVersionString@/private/var/db/gkopaque.bundle@none
+System Integrity Protection@/System/Library/Sandbox/Compatibility.bundle/Contents/version.plist@SIP-version.plist@CFBundleShortVersionString@/System/Library/Sandbox/Compatibility.bundle@none
+Malware Removal Tool@/System/Library/CoreServices/MRT.app/Contents/version.plist@MRT-version.plist@CFBundleShortVersionString@/System/Library/CoreServices/MRT.app@none
+Core Suggestions@/System/Library/Intelligent Suggestions/Assets.suggestionsassets/Contents/version.plist@CS-version.plist@CFBundleShortVersionString@/System/Library/Intelligent Suggestions/Assets.suggestionsassets@none
+KEXT Exclusions@/System/Library/Extensions/AppleKextExcludeList.kext/Contents/version.plist@KE-version.plist@CFBundleShortVersionString@/System/Library/Extensions/AppleKextExcludeList.kext@none
+Chinese Word List@/usr/share/mecabra/updates/com.apple.inputmethod.SCIM.bundle/Contents/version.plist@CW-version.plist@CFBundleShortVersionString@/usr/share/mecabra/updates/com.apple.inputmethod.SCIM.bundle@none
+Core LSKD (kdrl)@/usr/share/kdrl.bundle/info.plist@kdrl-info.plist@CFBundleShortVersionString@/usr/share/kdrl.bundle@none
+XProtect@/System/Library/CoreServices/XProtect.bundle/Contents/Resources/XProtect.meta.plist@XProtect.meta.plist@Version@/System/Library/CoreServices/XProtect.bundle@none
 EOF
 else # Sierra (and later)
 	read -d '' macsulist <<"EOF"
-Gatekeeper@/private/var/db/gkopaque.bundle/Contents/version.plist@GK-version.plist@CFBundleShortVersionString@/private/var/db/gkopaque.bundle
-System Integrity Protection@/System/Library/Sandbox/Compatibility.bundle/Contents/version.plist@SIP-version.plist@CFBundleShortVersionString@/System/Library/Sandbox/Compatibility.bundle
-Malware Removal Tool@/System/Library/CoreServices/MRT.app/Contents/version.plist@MRT-version.plist@CFBundleShortVersionString@/System/Library/CoreServices/MRT.app
-Core Suggestions@/System/Library/PrivateFrameworks/CoreSuggestionsInternals.framework/Resources/Assets.suggestionsassets/Contents/version.plist@CS-version.plist@CFBundleShortVersionString@/System/Library/PrivateFrameworks/CoreSuggestionsInternals.framework/Resources/Assets.suggestionsassets
-KEXT Exclusions@/System/Library/Extensions/AppleKextExcludeList.kext/Contents/version.plist@KE-version.plist@CFBundleShortVersionString@/System/Library/Extensions/AppleKextExcludeList.kext
-Chinese Word List@/System/Library/Input Methods/SCIM.app/Contents/version.plist@CW-version.plist@CFBundleShortVersionString@/System/Library/Input Methods/SCIM.app
-Core LSKD (dkrl)@/usr/share/kdrl.bundle/info.plist@dkrl-info.plist@CFBundleVersion@/usr/share/kdrl.bundle
-XProtect@/System/Library/CoreServices/XProtect.bundle/Contents/Resources/XProtect.meta.plist@XProtect.meta.plist@Version@/System/Library/CoreServices/XProtect.bundle
+Gatekeeper@/private/var/db/gkopaque.bundle/Contents/version.plist@GK-version.plist@CFBundleShortVersionString@/private/var/db/gkopaque.bundle@CFBundleVersion
+System Integrity Protection@/System/Library/Sandbox/Compatibility.bundle/Contents/version.plist@SIP-version.plist@CFBundleShortVersionString@/System/Library/Sandbox/Compatibility.bundle@none
+Malware Removal Tool@/System/Library/CoreServices/MRT.app/Contents/version.plist@MRT-version.plist@CFBundleShortVersionString@/System/Library/CoreServices/MRT.app@CFBundleVersion
+Core Suggestions@/System/Library/PrivateFrameworks/CoreSuggestionsInternals.framework/Resources/Assets.suggestionsassets/Contents/version.plist@CS-version.plist@CFBundleShortVersionString@/System/Library/PrivateFrameworks/CoreSuggestionsInternals.framework/Resources/Assets.suggestionsassets@none
+KEXT Exclusions@/System/Library/Extensions/AppleKextExcludeList.kext/Contents/version.plist@KE-version.plist@CFBundleShortVersionString@/System/Library/Extensions/AppleKextExcludeList.kext@none
+Chinese Word List@/System/Library/Input Methods/SCIM.app/Contents/version.plist@CW-version.plist@CFBundleShortVersionString@/System/Library/Input Methods/SCIM.app@none
+Core LSKD (kdrl)@/usr/share/kdrl.bundle/info.plist@kdrl-info.plist@CFBundleShortVersionString@/usr/share/kdrl.bundle@none
+XProtect@/System/Library/CoreServices/XProtect.bundle/Contents/version.plist@XP-version.plist@CFBundleShortVersionString@/System/Library/CoreServices/XProtect.bundle@CFBundleVersion
 EOF
 fi
 
 # check for plist backups
-while IFS='@' read -r cname cplpath cbname ckey cinfo
+while IFS='@' read -r cname cplpath cbname ckey cinfo ckeyalt
 do
 	if ! [[ -f "$cachedir/$cbname" ]] ; then
 		ipldate="n/a"
@@ -170,7 +172,14 @@ do
 		ipldate=$(stat -f "%Sc" "$cplpath")
 		ixpversion=$(defaults read "$cplpath" $ckey 2>/dev/null)
 		[[ $ixpversion == "" ]] && ixpversion="n/a"
-		echo "$cname version: v$ixpversion"
+		if [[ $ckeyalt != "none" ]] ; then
+			build=$(defaults read "$cplpath" $ckeyalt 2>/dev/null)
+			[[ $build == "" ]] && build="n/a"
+			buildstr=" ($build)"
+		else
+			buildstr=""
+		fi
+		echo "$cname version: $ixpversion$buildstr"
 		echo "Updated: $ipldate"
 		cp "$cplpath" "$cachedir/$cbname"
 		echo "$cname plist backed up." >&2
@@ -213,21 +222,36 @@ else
 fi
 
 # check components
-while IFS='@' read -r cname cplpath cbname ckey cinfo
+while IFS='@' read -r cname cplpath cbname ckey cinfo ckeyalt
 do
 	pldate=$(stat -f "%Sc" "$cplpath")
-	nxpversion=$(defaults read "$cplpath" $ckey)
+	nxpversion=$(defaults read "$cplpath" $ckey 2>/dev/null)
 	[[ $nxpversion == "" ]] && nxpversion="n/a"
+	if [[ $ckeyalt != "none" ]] ; then
+		nxpbuild=$(defaults read "$cplpath" $ckeyalt 2>/dev/null)
+		[[ $nxpbuild == "" ]] && nxpbuild="n/a"
+		nxpbuildstr=" ($nxpbuild)"
+	else
+		nxpbuildstr=""
+	fi
 	if [[ $(md5 -q "$cplpath") == $(md5 -q "$cachedir/$cbname") ]] ; then
 		echo "$cname status: unchanged"
-		echo "$cname version: $nxpversion ($pldate)"
+		echo "$cname version: $nxpversion$nxpbuildstr"
+		echo "Last updated: $pldate"
 	else
 		oxpversion=$(defaults read "$cachedir/$cbname" $ckey 2>/dev/null)
 		[[ $oxpversion == "" ]] && oxpversion="n/a"
-		echo "$cname status: UPDATED from v$oxpversion to v$nxpversion on $pldate."
-		logbody="New $cname update\nPath: $cinfo\nVersions: v$oxpversion > v$nxpversion\nDate: $pldate"
+		if [[ $ckeyalt != "none" ]] ; then
+			oxpbuild=$(defaults read "$cplpath" $ckeyalt 2>/dev/null)
+			[[ $oxpbuild == "" ]] && oxpbuild="n/a"
+			oxpbuildstr=" ($oxpbuild)"
+		else
+			oxpbuildstr=""
+		fi
+		echo "$cname status: UPDATED from $oxpversion$oxpbuildstr to $nxpversion$nxpbuildstr on $pldate."
+		logbody="New $cname update\nPath: $cinfo\nVersions: $oxpversion$oxpbuildstr > $nxpversion$nxpbuildstr\nDate: $pldate"
 		_beep
-		_notify "$cname" "v$oxpversion > v$nxpversion ($pldate)"
+		_notify "$cname" "$oxpversion$oxpbuildstr > $nxpversion$nxpbuildstr [$pldate] "
 		if [[ "$cname" == "XProtect" ]] ; then
 			_digitaping
 			if $dsaccess && [[ $nxpversion != "n/a" ]] ; then
@@ -242,5 +266,5 @@ do
 	fi
 done < <(echo "$macsulist" | grep -v "^$")
 
-echo "*** Exiting... ***"
+echo "Exiting..."
 exit

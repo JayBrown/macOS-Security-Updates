@@ -12,7 +12,7 @@
 * **Core Suggestions**
 * **Incompatible Kernel Extensions (KEXT Exclusions)**
 * **Chinese Word List (SCIM)**
-* **Core LSKD (dkrl)**
+* **Core LSKD (kdrl)**
 
 **For XProtect updates macSU also tries to get more information on the update from Digita Security's [Xplorer](https://digitasecurity.com/xplorer/).**
 
@@ -28,7 +28,9 @@
 * optional: install **[terminal-notifier](https://github.com/julienXX/terminal-notifier)**
 
 ### Testing
-After running the LaunchAgent at least once, e.g. with `launchctl start local.lcars.macOSSecurityUpdates`, you can test the update notification functionality i.a. by entering the following command sequence:
+**Execute `macsu.sh` at least once**, e.g. by running the LaunchAgent with `launchctl start local.lcars.macOSSecurityUpdates`, or by calling the script directly: `./macsu.sh`
+
+Then you can test the update notification functionality i.a. by entering the following command sequence:
 
 `plutil -replace Version -integer 2098 "$HOME/.cache/macSU/XProtect.meta.plist" && launchctl start local.lcars.macOSSecurityUpdates`
 
@@ -45,3 +47,6 @@ After running the LaunchAgent at least once, e.g. with `launchctl start local.lc
 * `rm -rf $HOME/Library/Logs/local.lcars.macOSSecurityUpdates`
 * `rm -f /tmp/local.lcars.macOSSecurityUpdates.stdout`
 * `rm -f /tmp/local.lcars.macOSSecurityUpdates.stderr`
+
+## Future
+* XProtect: parse local plist files for malware definition updates
