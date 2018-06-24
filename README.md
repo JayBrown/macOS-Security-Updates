@@ -32,7 +32,7 @@
 
 Then you can test the update notification functionality i.a. by entering the following command sequence:
 
-`plutil -replace Version -integer 2098 "$HOME/.cache/macSU/XProtect.meta.plist" && launchctl start local.lcars.macOSSecurityUpdates`
+`plutil -replace CFBundleShortVersionString -integer 2098 "$HOME/.cache/macSU/XP-version.plist" && launchctl start local.lcars.macOSSecurityUpdates`
 
 ### Notes
 * The agent (and thereby the script) will run every 4 hours. If there has been an XProtect update, it's possible that Digita's **Xplorer** hasn't been updated yet, i.e. **macSU** will not return any useful information on the contents of the update. This obviously still needs some testing, but if you want to be on the safe side, you can change the agent's frequency by editing the plist key `StartInterval`, e.g. from 4 to 8 hours.

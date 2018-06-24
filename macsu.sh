@@ -146,7 +146,7 @@ Core Suggestions@/System/Library/Intelligent Suggestions/Assets.suggestionsasset
 KEXT Exclusions@/System/Library/Extensions/AppleKextExcludeList.kext/Contents/version.plist@KE-version.plist@CFBundleShortVersionString@/System/Library/Extensions/AppleKextExcludeList.kext@none
 Chinese Word List@/usr/share/mecabra/updates/com.apple.inputmethod.SCIM.bundle/Contents/version.plist@CW-version.plist@CFBundleShortVersionString@/usr/share/mecabra/updates/com.apple.inputmethod.SCIM.bundle@none
 Core LSKD (kdrl)@/usr/share/kdrl.bundle/info.plist@kdrl-info.plist@CFBundleShortVersionString@/usr/share/kdrl.bundle@none
-XProtect@/System/Library/CoreServices/XProtect.bundle/Contents/Resources/XProtect.meta.plist@XProtect.meta.plist@Version@/System/Library/CoreServices/XProtect.bundle@none
+XProtect@/System/Library/CoreServices/XProtect.bundle/Contents/version.plist@XP-version.plist@CFBundleShortVersionString@/System/Library/CoreServices/XProtect.bundle@none
 EOF
 else # Sierra (and later)
 	read -d '' macsulist <<"EOF"
