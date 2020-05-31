@@ -4,7 +4,7 @@
 
 # macOS Security Updates (macSU) <img src="https://github.com/JayBrown/macOS-Security-Updates/blob/master/img/jb-img.png" height="20px"/>
 
-**macOS Security Updates (macSU) is a LaunchAgent and shell script for macOS 10.5 (Catalina). It will run a scan every four hours and notify the user if any of the following macOS Security components has been been updated:**
+**macOS Security Updates (macSU) is a LaunchAgent and shell script for macOS 10.15 (Catalina). It will run a scan every four hours and notify the user if any of the following macOS Security components has been been updated:**
 * **App Exceptions**
 * **Compatibility Notification Data**
 * **Core LSKD (kdrl)**
