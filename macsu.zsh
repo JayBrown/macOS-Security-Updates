@@ -2,7 +2,7 @@
 
 # macOS Security Updates (macSU)
 # shell script: macsu.zsh
-# v2.0.0
+# v2.0.1
 # Copyright (c) 2018–20 Joss Brown (pseud.)
 # license: MIT+
 # info: https://github.com/JayBrown/macOS-Security-Updates
@@ -11,6 +11,8 @@ export LANG=en_US.UTF-8
 
 localdate=$(date)
 account=$(id -u)
+accountname=$(id -un)
+HOMEDIR=$(eval echo "~$accountname")
 process="macOS Security"
 icon_loc="/System/Library/PreferencePanes/Security.prefPane/Contents/Resources/FileVault.icns"
 
@@ -57,7 +59,7 @@ echo "Local date: $localdate"
 echo "Process executed by: $account"
 
 # check for cache directory
-cachedir="$HOME/.cache/macSU"
+cachedir="$HOMEDIR/.cache/macSU"
 if ! [[ -d "$cachedir" ]] ; then
 	echo "macOS Security Updates initial run"
 	echo "No cache directory detected" >&2
@@ -115,7 +117,8 @@ if ! [[ -f "$cachedir/sysbuildv.txt" ]] ; then
 	echo "Saving current system build version: $sysbuildv"
 	echo -n "$sysbuildv" > "$cachedir/sysbuildv.txt"
 fi
-hwdata=$(system_profiler SPHardwareDataType | grep "Boot ROM Version")
+hwdata_raw=$(system_profiler SPHardwareDataType)
+hwdata=$(echo "$hwdata_raw" | grep "Boot ROM Version")
 if ! [[ -f "$cachedir/efiv.txt" ]] ; then
 	efiv=$(echo "$hwdata" | awk '{print $4}')
 	echo "Saving current EFI (Boot ROM) version: $efiv"
@@ -132,12 +135,40 @@ if ! [[ -f "$cachedir/rootless.conf" ]] ; then
 	cp /System/Library/Sandbox/rootless.conf "$cachedir/rootless.conf"
 fi
 
-# search for terminal-notifier ###
+# look for terminal-notifier (only on Yosemite and later)
 tn=$(command -v terminal-notifier 2>/dev/null)
 if ! [[ $tn ]] ; then
-	tn_loc=$(mdfind -onlyin / "kMDItemCFBundleIdentifier == 'fr.julienxx.oss.terminal-notifier'" 2>/dev/null | awk 'NR==1')
+	tn_loc=$(mdfind \
+		-onlyin /Applications/ \
+		-onlyin $HOMEDIR/Applications/ \
+		-onlyin /Developer/Applications/ \
+		-onlyin $HOMEDIR/Developer/Applications/ \
+		-onlyin /Network/Applications/ \
+		-onlyin /Network/Developer/Applications/ \
+		-onlyin /AppleInternal/Applications/ \
+		-onlyin /usr/local/Cellar/terminal-notifier/ \
+		-onlyin /opt/local/ \
+		-onlyin /sw/ \
+		-onlyin $HOMEDIR/.local/bin \
+		-onlyin $HOMEDIR/bin \
+		-onlyin $HOMEDIR/local/bin \
+		"kMDItemCFBundleIdentifier == 'fr.julienxx.oss.terminal-notifier'" 2>/dev/null | LC_COLLATE=C sort | awk 'NR==1')
 	if ! [[ $tn_loc ]] ; then
-		tn_loc=$(mdfind -onlyin / "kMDItemCFBundleIdentifier == 'nl.superalloy.oss.terminal-notifier'" 2>/dev/null | awk 'NR==1')
+		tn_loc=$(mdfind \
+			-onlyin /Applications/ \
+			-onlyin $HOMEDIR/Applications/ \
+			-onlyin /Developer/Applications/ \
+			-onlyin $HOMEDIR/Developer/Applications/ \
+			-onlyin /Network/Applications/ \
+			-onlyin /Network/Developer/Applicationsv \
+			-onlyin /AppleInternal/Applications/ \
+			-onlyin /usr/local/Cellar/terminal-notifier/ \
+			-onlyin /opt/local/ \
+			-onlyin /sw/ \
+			-onlyin $HOMEDIR/.local/bin \
+			-onlyin $HOMEDIR/bin \
+			-onlyin $HOMEDIR/local/bin \
+			"kMDItemCFBundleIdentifier == 'nl.superalloy.oss.terminal-notifier'" 2>/dev/null | LC_COLLATE=C sort | awk 'NR==1')
 		if ! [[ $tn_loc ]] ; then
 			tn_status="osa"
 		else
@@ -151,9 +182,37 @@ else
 	if (( $(echo "$tn_vers >= 1.8" | bc -l) )) && (( $(echo "$tn_vers < 2.0" | bc -l) )) ; then
 		tn_status="tn-cli"
 	else
-		tn_loc=$(mdfind -onlyin / "kMDItemCFBundleIdentifier == 'fr.julienxx.oss.terminal-notifier'" 2>/dev/null | awk 'NR==1')
+		tn_loc=$(mdfind \
+			-onlyin /Applications/ \
+			-onlyin $HOMEDIR/Applications/ \
+			-onlyin /Developer/Applications/ \
+			-onlyin $HOMEDIR/Developer/Applications/ \
+			-onlyin /Network/Applications/ \
+			-onlyin /Network/Developer/Applications/ \
+			-onlyin /AppleInternal/Applications/ \
+			-onlyin /usr/local/Cellar/terminal-notifier/ \
+			-onlyin /opt/local/ \
+			-onlyin /sw/ \
+			-onlyin $HOMEDIR/.local/bin \
+			-onlyin $HOMEDIR/bin \
+			-onlyin $HOMEDIR/local/bin \
+			"kMDItemCFBundleIdentifier == 'fr.julienxx.oss.terminal-notifier'" 2>/dev/null | LC_COLLATE=C sort | awk 'NR==1')
 		if ! [[ $tn_loc ]] ; then
-			tn_loc=$(mdfind -onlyin / "kMDItemCFBundleIdentifier == 'nl.superalloy.oss.terminal-notifier'" 2>/dev/null | awk 'NR==1')
+			tn_loc=$(mdfind \
+				-onlyin /Applications/ \
+				-onlyin $HOMEDIR/Applications/ \
+				-onlyin /Developer/Applications/ \
+				-onlyin $HOMEDIR/Developer/Applications/ \
+				-onlyin /Network/Applications/ \
+				-onlyin /Network/Developer/Applications/ \
+				-onlyin /AppleInternal/Applications/ \
+				-onlyin /usr/local/Cellar/terminal-notifier/ \
+				-onlyin /opt/local/ \
+				-onlyin /sw/ \
+				-onlyin $HOMEDIR/.local/bin \
+				-onlyin $HOMEDIR/bin \
+				-onlyin $HOMEDIR/local/bin \
+				"kMDItemCFBundleIdentifier == 'nl.superalloy.oss.terminal-notifier'" 2>/dev/null | LC_COLLATE=C sort | awk 'NR==1')
 			if ! [[ $tn_loc ]] ; then
 				tn_status="osa"
 			else
@@ -166,6 +225,7 @@ else
 fi
 
 logbody=""
+updated=false
 
 # check auxiliary components
 sysv_previous=$(cat "$cachedir/sysv.txt")
@@ -173,6 +233,7 @@ if [[ $sysv_previous == "$sysv" ]] ; then
 	echo "System: unchanged ($sysv)"
 else
 	_beep
+	updated=true
 	echo "System: UPDATED from $sysv_previous to $sysv"
 	logbody="$logbody\nSystem: $sysv_previous > $sysv"
 	echo -n "$sysv" > "$cachedir/sysv.txt"
@@ -184,6 +245,7 @@ if [[ $sysbuildv_previous == "$sysbuildv" ]] ; then
 	echo "System build: unchanged ($sysbuildv)"
 else
 	_beep
+	updated=true
 	echo "System build: UPDATED from $sysbuildv_previous to $sysbuildv"
 	logbody="$logbody\nSystem build: $sysbuildv_previous > $sysbuildv"
 	echo -n "$sysbuildv" > "$cachedir/sysbuildv.txt"
@@ -195,6 +257,7 @@ if [[ $efiv_previous == "$efiv" ]] ; then
 	echo "EFI (Boot ROM): unchanged ($efiv)"
 else
 	_beep
+	updated=true
 	echo "EFI (Boot ROM): UPDATED from $efiv_previous to $efiv"
 	logbody="$logbody\nEFI (Boot ROM): $efiv_previous > $efiv"
 	echo -n "$efiv" > "$cachedir/efiv.txt"
@@ -207,6 +270,7 @@ if [[ $ibridgev_previous == "$ibridgev" ]] ; then
 	echo "iBridge: unchanged ($ibridgev)"
 else
 	_beep
+	updated=true
 	echo "iBridge: UPDATED from $ibridgev_previous to $ibridgev"
 	logbody="$logbody\niBridge: $ibridgev_previous > $ibridgev"
 	echo -n "$ibridgev" > "$cachedir/ibridgev.txt"
@@ -217,6 +281,7 @@ if [[ $(md5 -q /System/Library/Sandbox/rootless.conf) == $(md5 -q "$cachedir/roo
 	echo "SIP Configuration: unchanged [$pldate]"
 else
 	_beep
+	updated=true
 	echo "SIP Configuration: rootless.conf UPDATED on $pldate"
 	logbody="$logbody\nSIP Configuration (rootless.conf): $pldate"
 	rm -f "$cachedir/rootless.conf" 2>/dev/null
@@ -250,6 +315,7 @@ do
 			oxpbuildstr=""
 		fi
 		_beep
+		updated=true
 		echo "$cname: UPDATED from $oxpversion$oxpbuildstr to $nxpversion$nxpbuildstr on $pldate"
 		logbody="$logbody\n$cname: $oxpversion$oxpbuildstr > $nxpversion$nxpbuildstr [$pldate] ($cinfo)"
 		_notify "$cname" "$oxpversion$oxpbuildstr > $nxpversion$nxpbuildstr [$pldate] "
@@ -257,11 +323,16 @@ do
 	fi
 done < <(echo "$macsulist" | grep -v "^$")
 
-if [[ -d "$HOME/Library/Logs/local.lcars.macOSSecurityUpdates" ]] ; then
-	rm -rf "$HOME/Library/Logs/local.lcars.macOSSecurityUpdates" 2>/dev/null
+if [[ -d "$HOMEDIR/Library/Logs/local.lcars.macOSSecurityUpdates" ]] ; then
+	rm -rf "$HOMEDIR/Library/Logs/local.lcars.macOSSecurityUpdates" 2>/dev/null
 fi
-logloc="$HOME/Library/Logs/local.lcars.macOSSecurityUpdates.log"
-logbody=$(echo -e "$logbody" | grep -v "^$")
-logger -i -s -t "macOS Security Updates" "$logbody" 2>> "$logloc"
+logloc="$HOMEDIR/Library/Logs/local.lcars.macOSSecurityUpdates.log"
+if $updated ; then
+	logbody=$(echo -e "$logbody" | grep -v "^$")
+	logger -i -s -t "macOS Security Updates" "$logbody" 2>> "$logloc"
+else
+	logbody="No recent system updates"
+	logger -i -s -t "macOS Security Updates" "$logbody" 2>> "$logloc"
+fi
 
 exit
