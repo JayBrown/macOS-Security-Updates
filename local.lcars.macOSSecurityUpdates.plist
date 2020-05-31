@@ -13,7 +13,7 @@
 	<key>ProcessType</key>
 	<string>Background</string>
 	<key>Program</key>
-	<string>/usr/local/bin/macsu.sh</string>
+	<string>/usr/local/bin/macsu.zsh</string>
 	<key>StandardErrorPath</key>
 	<string>/tmp/local.lcars.macOSSecurityUpdates.stderr</string>
 	<key>StandardOutPath</key>
