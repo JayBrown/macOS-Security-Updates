@@ -26,7 +26,7 @@
 * **iBridge**
 * **rootless.conf**
 
-**macSU now also checks against a remote database (hosted on GitHub) containing the current version numbers of the more important macOS security components.**
+**macSU now also checks against a remote database (hosted on GitHub) containing the current version numbers of the more important macOS security components. They are the first six in the list above. If any of them is outdated, the user will be notified. macSU will not notify the user when the system itself (which mostly includes EFI and iBridge) is out-of-date, to account for users who do not wish to update to a new system (immediately).**
 
 ![screengrab](https://github.com/JayBrown/macOS-Security-Updates/blob/master/img/screengrab.jpg)
 
