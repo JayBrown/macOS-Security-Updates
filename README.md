@@ -5,17 +5,19 @@
 # macOS Security Updates (macSU) <img src="https://github.com/JayBrown/macOS-Security-Updates/blob/master/img/jb-img.png" height="20px"/>
 
 **macOS Security Updates (macSU) is a LaunchAgent and shell script for macOS 10.15 (Catalina). It will run a scan every four hours and notify the user if any of the following macOS Security components has been been updated:**
-* **App Exceptions**
-* **Compatibility Notification Data**
-* **Core LSKD (kdrl)**
-* **Core Suggestions**
 * **Gatekeeper**
 * **Gatekeeper E**
-* **Incompatible Apps**
 * **Incompatible Kernel Extensions (KEXT Exclusions)**
 * **Malware Removal Tool (MRT)**
 * **TCC**
 * **XProtect**
+
+**Plus:**
+* **App Exceptions**
+* **Compatibility Notification Data**
+* **Core LSKD (kdrl)**
+* **Core Suggestions**
+* **Incompatible Apps**
 
 **Plus:**
 * **System**
@@ -23,6 +25,8 @@
 * **EFI (Boot ROM)**
 * **iBridge**
 * **rootless.conf**
+
+**macSU now also checks against a remote database (hosted on GitHub) containing the current version numbers of the more important macOS security components.**
 
 ![screengrab](https://github.com/JayBrown/macOS-Security-Updates/blob/master/img/screengrab.jpg)
 
@@ -55,3 +59,6 @@ Then you can test the update notification functionality i.a. by entering the fol
 
 ## Future
 * find a way to read the System Integrity Protection (SIP) version number on Catalina
+
+## Thanks
+* **Howard Oakley** (@hoakleyelc) of **[EclecticLight](https://eclecticlight.co/)** for providing the [databases](https://github.com/hoakleyelc/updates) of current version numbers
