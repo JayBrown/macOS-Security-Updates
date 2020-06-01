@@ -3,7 +3,7 @@
 
 # macOS Security Updates (macSU)
 # shell script: macsu.zsh / LaunchAgent: local.lcars.macOSSecurityUpdates
-# v2.1.1
+# v2.1.2
 # Copyright (c) 2018–20 Joss Brown (pseud.)
 # license: MIT+
 # info: https://github.com/JayBrown/macOS-Security-Updates
@@ -11,7 +11,7 @@
 
 export LANG=en_US.UTF-8
 
-macsuv="2.1.1"
+macsuv="2.1.2"
 macsumv="2"
 scrname=$(basename "$0")
 process="macOS Security"
@@ -191,7 +191,7 @@ Compatibility Notification Data@/Library/Apple/Library/Bundles/CompatibilityNoti
 Core LSKD (kdrl)@/usr/share/kdrl.bundle/version.plist@kdrl-version.plist@CFBundleShortVersionString@/usr/share/kdrl.bundle@/usr/share/kdrl.bundle/lskd.rl@none
 Core Suggestions@/System/Library/PrivateFrameworks/CoreSuggestionsInternals.framework/Versions/A/Resources/Assets.suggestionsassets/version.plist@CS-version.plist@CFBundleShortVersionString@/System/Library/PrivateFrameworks/CoreSuggestionsInternals.framework@/System/Library/PrivateFrameworks/CoreSuggestionsInternals.framework/Versions/A/Resources/Assets.suggestionsassets/AssetData@none
 Gatekeeper@/private/var/db/gkopaque.bundle/Contents/version.plist@GK-version.plist@CFBundleShortVersionString@/private/var/db/gkopaque.bundle@/private/var/db/gkopaque.bundle/Contents/Resources/gkopaque.db@none
-Gatekeeper E@/private/var/db/gke.bundle/Contents/version.plist@GKE-version.plist@CFBundleShortVersionString@/private/var/db/gke.bundle@/private/var/db/gke.bundle/Contents/Resources/gke.auth@none
+Gatekeeper E@/private/var/db/gke.bundle/Contents/version.plist@GKE-version.plist@CFBundleShortVersionString@/private/var/db/gke.bundle@/private/var/db/gke.bundle/Contents/Resources/gk.db@none
 Incompatible Apps@/Library/Apple/Library/Bundles/IncompatibleAppsList.bundle/Contents/version.plist@IncApps-version.plist@CFBundleShortVersionString@/Library/Apple/Library/Bundles/IncompatibleAppsList.bundle@/Library/Apple/Library/Bundles/IncompatibleAppsList.bundle/Contents/Resources/IncompatibleAppsList.plist@none
 KEXT Exclusions@/Library/Apple/System/Library/Extensions/AppleKextExcludeList.kext/Contents/version.plist@KE-version.plist@CFBundleShortVersionString@/Library/Apple/System/Library/Extensions/AppleKextExcludeList.kext@/Library/Apple/System/Library/Extensions/AppleKextExcludeList.kext/Contents/Resources/ExceptionLists.plist@none
 Malware Removal Tool@/Library/Apple/System/Library/CoreServices/MRT.app/Contents/version.plist@MRT-version.plist@CFBundleShortVersionString@/Library/Apple/System/Library/CoreServices/MRT.app@none@none
@@ -554,15 +554,19 @@ do
 	fi
 	if [[ $nxpversion != "n/a" ]] ; then
 		skipcomp=false
+		tonotify=true
 		if [[ $cname == "Gatekeeper" ]] ; then
 			sec_current=$(echo "$sysup" | awk -F"Gatekeeper = " '{print $2}')
 		elif [[ $cname == "Gatekeeper E" ]] ; then
+			tonotify=false
 			sec_current=$(echo "$sysup" | awk -F"GatekeepDE = " '{print $2}')
 		elif [[ $cname == "KEXT Exclusions" ]] ; then
+			tonotify=false
 			sec_current=$(echo "$sysup" | awk -F"KEXT$sysmv = " '{print $2}')
 		elif [[ $cname == "Malware Removal Tool" ]] ; then
 			sec_current=$(echo "$sysup" | awk -F"MRT = " '{print $2}')
 		elif [[ $cname == "TCC" ]] ; then
+			tonotify=false
 			sec_current=$(echo "$sysup" | awk -F"TCC$sysmv = " '{print $2}')
 		elif [[ $cname == "XProtect" ]] ; then
 			sec_current=$(echo "$sysup" | awk -F"XProtect$sysmv = " '{print $2}')
@@ -575,7 +579,7 @@ do
 				_sysbeep &
 				echo "$cname: a NEWER version is available: $nxpversion < $sec_current"
 				logbody="$logbody\n$cname: out-of-date [available: $sec_current]"
-				_notify "$cname" "Out-of-date: v$sec_current available!"
+				$tonotify && _notify "$cname" "Out-of-date: v$sec_current available!"
 			elif [[ $seccomp == "same" ]] ; then
 				echo "$cname: the current version is installed"
 			elif [[ $seccomp == "lesser" ]] ; then
