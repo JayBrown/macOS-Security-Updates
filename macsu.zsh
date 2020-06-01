@@ -3,7 +3,7 @@
 
 # macOS Security Updates (macSU)
 # shell script: macsu.zsh / LaunchAgent: local.lcars.macOSSecurityUpdates
-# v2.1.2
+# v2.1.3
 # Copyright (c) 2018–20 Joss Brown (pseud.)
 # license: MIT+
 # info: https://github.com/JayBrown/macOS-Security-Updates
@@ -11,7 +11,7 @@
 
 export LANG=en_US.UTF-8
 
-macsuv="2.1.2"
+macsuv="2.1.3"
 macsumv="2"
 scrname=$(basename "$0")
 process="macOS Security"
@@ -192,7 +192,7 @@ Core LSKD (kdrl)@/usr/share/kdrl.bundle/version.plist@kdrl-version.plist@CFBundl
 Core Suggestions@/System/Library/PrivateFrameworks/CoreSuggestionsInternals.framework/Versions/A/Resources/Assets.suggestionsassets/version.plist@CS-version.plist@CFBundleShortVersionString@/System/Library/PrivateFrameworks/CoreSuggestionsInternals.framework@/System/Library/PrivateFrameworks/CoreSuggestionsInternals.framework/Versions/A/Resources/Assets.suggestionsassets/AssetData@none
 Gatekeeper@/private/var/db/gkopaque.bundle/Contents/version.plist@GK-version.plist@CFBundleShortVersionString@/private/var/db/gkopaque.bundle@/private/var/db/gkopaque.bundle/Contents/Resources/gkopaque.db@none
 Gatekeeper E@/private/var/db/gke.bundle/Contents/version.plist@GKE-version.plist@CFBundleShortVersionString@/private/var/db/gke.bundle@/private/var/db/gke.bundle/Contents/Resources/gk.db@none
-Incompatible Apps@/Library/Apple/Library/Bundles/IncompatibleAppsList.bundle/Contents/version.plist@IncApps-version.plist@CFBundleShortVersionString@/Library/Apple/Library/Bundles/IncompatibleAppsList.bundle@/Library/Apple/Library/Bundles/IncompatibleAppsList.bundle/Contents/Resources/IncompatibleAppsList.plist@none
+Incompatible Apps@/Library/Apple/Library/Bundles/IncompatibleAppsList.bundle/Contents/version.plist@IncApps-version.plist@CFBundleShortVersionString@/Library/Apple/Library/Bundles/IncompatibleAppsList.bundle@/Library/Apple/Library/Bundles/IncompatibleAppsList.bundle/Contents/Resources/IncompatibleAppsList.plist@BuildVersion
 KEXT Exclusions@/Library/Apple/System/Library/Extensions/AppleKextExcludeList.kext/Contents/version.plist@KE-version.plist@CFBundleShortVersionString@/Library/Apple/System/Library/Extensions/AppleKextExcludeList.kext@/Library/Apple/System/Library/Extensions/AppleKextExcludeList.kext/Contents/Resources/ExceptionLists.plist@none
 Malware Removal Tool@/Library/Apple/System/Library/CoreServices/MRT.app/Contents/version.plist@MRT-version.plist@CFBundleShortVersionString@/Library/Apple/System/Library/CoreServices/MRT.app@none@none
 TCC@/Library/Apple/Library/Bundles/TCC_Compatibility.bundle/Contents/version.plist@TCC-version.plist@CFBundleShortVersionString@/Library/Apple/Library/Bundles/TCC_Compatibility.bundle@/Library/Apple/Library/Bundles/TCC_Compatibility.bundle/Contents/Resources/AllowApplicationsList.plist@none
