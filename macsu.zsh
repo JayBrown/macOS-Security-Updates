@@ -3,7 +3,7 @@
 
 # macOS Security Updates (macSU)
 # shell script: macsu.zsh / LaunchAgent: local.lcars.macOSSecurityUpdates
-# v2.1.0
+# v2.1.1
 # Copyright (c) 2018–20 Joss Brown (pseud.)
 # license: MIT+
 # info: https://github.com/JayBrown/macOS-Security-Updates
@@ -11,7 +11,7 @@
 
 export LANG=en_US.UTF-8
 
-macsuv="2.1.0"
+macsuv="2.1.1"
 macsumv="2"
 scrname=$(basename "$0")
 process="macOS Security"
@@ -243,7 +243,7 @@ if ! [[ -f "$cachedir/efiv.txt" ]] ; then
 	echo -n "$efiv" > "$cachedir/efiv.txt"
 fi
 if ! [[ -f "$cachedir/ibridgev.txt" ]] ; then
-	ibridgev=$(echo "$hwdata" | awk -F"[()]" '{print $2}' | awk -F"iBridge: " '{print $2}')
+	ibridgev=$(echo "$hwdata" | awk -F"[()]" '{print $2}' | awk -F"iBridge: " '{print $2}' | awk -F, '{print $1}')
 	! [[ $ibridgev ]] && ibridgev="n/a"
 	echo "Saving current iBridge version: $ibridgev"
 	echo -n "$ibridgev" > "$cachedir/ibridgev.txt"
