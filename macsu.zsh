@@ -3,7 +3,7 @@
 
 # macOS Security Updates (macSU)
 # shell script: macsu.zsh / LaunchAgent: local.lcars.macOSSecurityUpdates
-# v2.1.3
+# v2.1.4
 # Copyright (c) 2018–20 Joss Brown (pseud.)
 # license: MIT+
 # info: https://github.com/JayBrown/macOS-Security-Updates
@@ -11,7 +11,7 @@
 
 export LANG=en_US.UTF-8
 
-macsuv="2.1.3"
+macsuv="2.1.4"
 macsumv="2"
 scrname=$(basename "$0")
 process="macOS Security"
@@ -205,9 +205,9 @@ while IFS='@' read -r cname cplpath cbname ckey cinfo cplpathalt ckeyalt
 do
 	if ! [[ -f "$cachedir/$cbname" ]] ; then
 		if [[ $cplpathalt != "none" ]] ; then
-			ipldate=$(stat -f %Sm -t %F" "%T "$cplpathalt")
+			ipldate=$(stat -f %Sc -t %F" "%T "$cplpathalt")
 		else
-			ipldate=$(stat -f %Sm -t %F" "%T "$cplpath")
+			ipldate=$(stat -f %Sc -t %F" "%T "$cplpath")
 		fi
 		ixpversion=$(defaults read "$cplpath" "$ckey" 2>/dev/null)
 		! [[ $ixpversion ]] && ixpversion="n/a"
@@ -262,7 +262,7 @@ securl="$eclbaseurl/sysupdates.plist"
 rcsec_tmp="$cachedir/tmp/sysupdates.plist"
 rm -f "$rcsec_tmp" 2>/dev/null
 echo "Trying to download sysupdates.plist..."
-curl -L -s --connect-timeout 30 --max-time 30 "$securl" -o "$rcsec_tmp" &>/dev/null
+curl -q -f -L -s --connect-timeout 30 --max-time 30 --retry 1 "$securl" -o "$rcsec_tmp" &>/dev/null
 rcsec="$cachedir/sysupdates.plist"
 if [[ -f "$rcsec_tmp" ]] ; then
 	echo "Success!"
@@ -277,7 +277,7 @@ modelname=$(echo "$modelid" | tr -d '[:digit:]' | sed 's/,$//')
 hwurl="$eclbaseurl/$modelname.plist"
 rchw_tmp="$cachedir/tmp/$modelname.plist"
 rm -f "$rchw_tmp" 2>/dev/null
-curl -L -s --connect-timeout 30 --max-time 30 "$hwurl" -o "$rchw_tmp" &>/dev/null
+curl -q -f -L -s --connect-timeout 30 --max-time 30 --retry 1 "$hwurl" -o "$rchw_tmp" &>/dev/null
 echo "Trying to download $modelname.plist..."
 rchw="$cachedir/$modelname.plist"
 if [[ -f "$rchw_tmp" ]] ; then
@@ -464,7 +464,6 @@ if [[ $efiv != "n/a" ]] ; then
 		logbody="$logbody\nEFI (Boot ROM): out-of-date [available: $efiv_current]"
 	elif [[ $eficomp == "same" ]] ; then
 		echo "EFI (Boot ROM): the current version is installed"
-		logbody="$logbody\nEFI (Boot ROM): current version installed"
 	elif [[ $eficomp == "lesser" ]] ; then
 		echo "EFI (Boot ROM): a newer version is already installed"
 		logbody="$logbody\nEFI (Boot ROM): newer version already installed"
@@ -492,7 +491,6 @@ if [[ $ibridgev != "n/a" ]] ; then
 		logbody="$logbody\niBridge: out-of-date [available: $ibridgev_current]"
 	elif [[ $ibridgecomp == "same" ]] ; then
 		echo "iBridge: the current version is installed"
-		logbody="$logbody\niBridge: current version installed"
 	elif [[ $ibridgecomp == "lesser" ]] ; then
 		echo "iBridge: a newer version is already installed"
 		logbody="$logbody\niBridge: newer version already installed"
@@ -501,7 +499,7 @@ if [[ $ibridgev != "n/a" ]] ; then
 	fi
 fi
 
-pldate=$(stat -f %Sm -t %F" "%T /System/Library/Sandbox/rootless.conf)
+pldate=$(stat -f %Sc -t %F" "%T /System/Library/Sandbox/rootless.conf)
 if [[ $(md5 -q /System/Library/Sandbox/rootless.conf) == $(md5 -q "$cachedir/rootless.conf") ]] ; then
 	echo "SIP Configuration: unchanged [$pldate]"
 else
@@ -520,9 +518,9 @@ sysup=$(/usr/libexec/PlistBuddy -c "Print" "$cachedir/sysupdates.plist")
 while IFS='@' read -r cname cplpath cbname ckey cinfo cplpathalt ckeyalt
 do
 	if [[ $cplpathalt != "none" ]] ; then
-		pldate=$(stat -f %Sm -t %F" "%T "$cplpathalt")
+		pldate=$(stat -f %Sc -t %F" "%T "$cplpathalt")
 	else
-		pldate=$(stat -f %Sm -t %F" "%T "$cplpath")
+		pldate=$(stat -f %Sc -t %F" "%T "$cplpath")
 	fi
 	nxpversion=$(defaults read "$cplpath" "$ckey" 2>/dev/null)
 	! [[ $nxpversion ]] && nxpversion="n/a"
@@ -550,6 +548,7 @@ do
 		echo "$cname: UPDATED from $oxpversion$oxpbuildstr to $nxpversion$nxpbuildstr [$pldate]"
 		logbody="$logbody\n$cname: $oxpversion$oxpbuildstr > $nxpversion$nxpbuildstr [$pldate] ($cinfo)"
 		_notify "$cname" "$oxpversion$oxpbuildstr > $nxpversion$nxpbuildstr [$pldate] "
+		rm -f "$cachedir/$cbname" 2>/dev/null
 		cp "$cplpath" "$cachedir/$cbname" 2>/dev/null
 	fi
 	if [[ $nxpversion != "n/a" ]] ; then
