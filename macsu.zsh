@@ -10,6 +10,7 @@
 # thanks to Howard Oakley: https://eclecticlight.co / https://github.com/hoakleyelc/updates
 
 export LANG=en_US.UTF-8
+export SYSTEM_VERSION_COMPAT=0
 
 macsuv="2.1.4"
 macsumv="2"
@@ -27,15 +28,17 @@ _beep () {
 
 sysv=$(sw_vers -productVersion)
 sysmv=$(echo "$sysv" | awk -F. '{print $2}')
-if [[ "$sysmv" -lt 15 ]] ; then
-	_sysbeep &
-	osascript &>/dev/null << EOT
+if [[ $sysv != "11"* ]] ; then
+	if [[ "$sysmv" -lt 15 ]] ; then
+		_sysbeep &
+		osascript &>/dev/null << EOT
 tell application "System Events"
 	display notification "macOS 10.15 (Catalina) required!" with title "$process [" & "$account" & "]" subtitle "⚠️ Error: incompatible system!"
 end tell
 EOT
-	echo -e "Error! Incompatible system.\n$scrname v$macsuv needs at least macOS 10.15 (Catalina).\n*** Exiting... ***" >&2
-	exit 1
+		echo -e "Error! Incompatible system.\n$scrname v$macsuv needs at least macOS 10.15 (Catalina).\n*** Exiting... ***" >&2
+		exit 1
+	fi
 fi
 
 icon_loc="/System/Library/PreferencePanes/Security.prefPane/Contents/Resources/FileVault.icns"
